@@ -75,7 +75,7 @@ jobs:
           mkdir -p ~/.ssh
       - name: Deploy frontend to Staging
         run: |
-          echo "${{ secrets.UNRAID_DEPLOY_SSH_KEY_FRONTEND_STAGING }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.MAC2K_DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           cat >> ~/.ssh/config <<EOF
           Host deploy-lets-todo.dev2ksoftware.com
@@ -88,7 +88,7 @@ jobs:
           chmod 600 ~/.ssh/config
 
           rsync -avz --delete \
-            frontend/ root@deploy-lets-todo.dev2ksoftware.com:/mnt/nvme/appdata/static-sites/www/lets-todo-staging/
+            frontend/ gh-deploy@deploy-lets-todo.dev2ksoftware.com:/srv/mac2k/data/static-sites/www/lets-todo-staging/
 
   deploy-backend-staging:
     needs: [quality, publish-backend-image]
@@ -198,7 +198,7 @@ jobs:
       - name: Configure restricted deployment access
         run: |
           echo "${{ secrets.UNRAID_DEPLOY_SSH_KEY_BACKEND }}" > ~/.ssh/backend
-          echo "${{ secrets.UNRAID_DEPLOY_SSH_KEY_FRONTEND }}" > ~/.ssh/frontend
+          echo "${{ secrets.MAC2K_DEPLOY_SSH_KEY }}" > ~/.ssh/frontend
           chmod 600 ~/.ssh/backend ~/.ssh/frontend
           cat >> ~/.ssh/config <<EOF
           Host deploy-lets-todo-backend
@@ -224,4 +224,4 @@ jobs:
       - name: Deploy frontend to Production
         run: |
           rsync -avz --delete \
-            frontend/ root@deploy-lets-todo-frontend:/mnt/nvme/appdata/static-sites/www/lets-todo/
+            frontend/ gh-deploy@deploy-lets-todo-frontend:/srv/mac2k/data/static-sites/www/lets-todo/
